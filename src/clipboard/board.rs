@@ -5,7 +5,7 @@ pub fn read_clipboard() -> Option<String> {
     clipboard.get_text().ok()
 }
 
-pub fn write_clipboard(text: String) {
+pub fn write_clipboard(text: &str) {
     let mut clipboard = Clipboard::new().unwrap();
     clipboard.set_text(text).unwrap();
 }

@@ -4,12 +4,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
-    id: usize,
-    value: String,
+    id: u8,
+    pub value: String,
 }
 
 impl Item {
-    fn new(value: String, len: usize) -> Self {
+    fn new(value: String, len: u8) -> Self {
         Item { id: len + 1, value }
     }
 }
@@ -29,7 +29,7 @@ pub fn load_history() -> std::io::Result<Vec<Item>> {
 
 pub fn save_history(history: &[Item]) -> std::io::Result<()> {
     let parsed: String = serde_json::to_string(history).unwrap();
-    fs::write("history.json", parsed)?;
+    fs::write("history.json", parsed)?; // TODO: handle persistent storage properly
 
     Ok(())
 }
@@ -37,11 +37,17 @@ pub fn save_history(history: &[Item]) -> std::io::Result<()> {
 pub fn save_item(value: &str) -> std::io::Result<()> {
     let mut history = load_history()?;
 
-    let item = Item::new(value.into(), history.len());
+    let item = Item::new(value.into(), history.len() as u8);
 
     history.push(item);
 
     save_history(&history)?;
 
     Ok(())
+}
+
+pub fn get_item(id: u8) -> std::io::Result<Option<Item>> {
+    let history = load_history()?;
+
+    Ok(history.into_iter().find(|item| item.id == id))
 }
