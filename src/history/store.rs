@@ -75,3 +75,7 @@ pub fn list_items() -> std::io::Result<()> {
 
     Ok(())
 }
+
+pub fn clear_history() -> std::io::Result<()> {
+    save_history(&Vec::new())
+}
