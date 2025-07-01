@@ -1,5 +1,6 @@
 mod clipboard;
 mod history;
+mod services;
 
 use std::error::Error;
 
@@ -8,6 +9,7 @@ use clap::{Parser, Subcommand};
 use crate::{
     clipboard::board::{read_clipboard, write_clipboard},
     history::store::{Item, clear_history, get_item, list_items, save_item, search},
+    services::background::watcher,
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -28,6 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         Commands::List => list_items()?,
         Commands::Clear => clear_history()?,
         Commands::Search { query } => search(&query)?,
+        Commands::Background => watcher(),
     }
 
     Ok(())
@@ -62,4 +65,6 @@ enum Commands {
     },
     /// clear history
     Clear,
+    /// start background watcher
+    Background,
 }

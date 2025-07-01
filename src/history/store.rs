@@ -104,3 +104,9 @@ pub fn search(query: &str) -> std::io::Result<()> {
 
     Ok(())
 }
+
+pub fn get_last_item() -> std::io::Result<Option<Item>> {
+    let mut history = load_history()?;
+
+    Ok(history.pop())
+}
