@@ -1,7 +1,10 @@
-use std::{fmt::Debug, fs};
+use std::{collections::VecDeque, fmt::Debug, fs};
 
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+
+/// max number of elements in the history
+const MAX_LENGTH: usize = 10;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Item {
@@ -47,13 +50,18 @@ pub fn save_history(history: &[Item]) -> std::io::Result<()> {
 }
 
 pub fn save_item(value: &str) -> std::io::Result<()> {
-    let mut history = load_history()?;
+    let mut history = VecDeque::from(load_history()?);
+
+    if history.len() >= MAX_LENGTH {
+        // remove item when list is equal to max length
+        history.pop_front();
+    }
 
     let item = Item::new(value.into());
 
-    history.push(item);
+    history.push_back(item);
 
-    save_history(&history)?;
+    save_history(&Vec::from(history))?;
 
     Ok(())
 }
