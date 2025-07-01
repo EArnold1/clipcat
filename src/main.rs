@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 
 use crate::{
     clipboard::board::{read_clipboard, write_clipboard},
-    history::store::{Item, get_item, save_item},
+    history::store::{Item, get_item, list_items, save_item},
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -21,10 +21,11 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
         Commands::Copy { id } => {
-            if let Some(Item { value, .. }) = get_item(id)? {
+            if let Some(Item { value, .. }) = get_item(&id)? {
                 write_clipboard(&value);
             }
         }
+        Commands::List => list_items()?,
     }
 
     Ok(())
@@ -48,6 +49,8 @@ enum Commands {
     /// copy value by id
     Copy {
         /// id of value to be copied
-        id: u8,
+        id: String,
     },
+    /// list all saved values
+    List,
 }
