@@ -44,12 +44,13 @@ fn load_history() -> std::io::Result<Vec<Item>> {
 
 pub fn save_history(history: &[Item]) -> std::io::Result<()> {
     let parsed: String = serde_json::to_string(history).unwrap();
-    fs::write("history.json", parsed)?; // TODO: handle persistent storage properly
+    fs::write("history.json", parsed)?; // TODO: handle persistent storage properly using `directories`
 
     Ok(())
 }
 
 pub fn save_item(value: &str) -> std::io::Result<()> {
+    // TODO: ascertain the memory cost to convert to VecDeque and back to Vec
     let mut history = VecDeque::from(load_history()?);
 
     if history.len() >= MAX_LENGTH {
@@ -86,4 +87,20 @@ pub fn list_items() -> std::io::Result<()> {
 
 pub fn clear_history() -> std::io::Result<()> {
     save_history(&Vec::new())
+}
+
+pub fn search(query: &str) -> std::io::Result<()> {
+    let history = load_history()?;
+
+    let filtered_result = history
+        .iter()
+        .filter(|item| item.id.contains(query) || item.value.contains(query));
+
+    println!("Searching for: {query}");
+
+    for item in filtered_result {
+        println!("id: {} value: {}", item.id, item.value);
+    }
+
+    Ok(())
 }

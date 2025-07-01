@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 
 use crate::{
     clipboard::board::{read_clipboard, write_clipboard},
-    history::store::{Item, clear_history, get_item, list_items, save_item},
+    history::store::{Item, clear_history, get_item, list_items, save_item, search},
 };
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -27,6 +27,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         Commands::List => list_items()?,
         Commands::Clear => clear_history()?,
+        Commands::Search { query } => search(&query)?,
     }
 
     Ok(())
@@ -54,6 +55,11 @@ enum Commands {
     },
     /// list all saved values
     List,
+    /// search for an item by id or content
+    Search {
+        /// query to search for
+        query: String,
+    },
     /// clear history
     Clear,
 }
