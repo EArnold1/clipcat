@@ -7,6 +7,7 @@ use crate::{
 
 pub fn watcher() {
     loop {
+        // Sleep for 5 seconds before polling the clipboard
         thread::sleep(Duration::from_secs(5));
 
         if let Some(value) = read_clipboard() {

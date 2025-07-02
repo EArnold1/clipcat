@@ -3,6 +3,8 @@ use std::{collections::VecDeque, fmt::Debug, fs};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 
+use crate::services::search::fuzzy_search;
+
 /// max number of elements in the history
 const MAX_LENGTH: usize = 10;
 
@@ -92,11 +94,14 @@ pub fn clear_history() -> std::io::Result<()> {
 pub fn search(query: &str) -> std::io::Result<()> {
     let history = load_history()?;
 
-    let filtered_result = history
-        .iter()
-        .filter(|item| item.id.contains(query) || item.value.contains(query));
+    let filtered_result = history.iter().filter(|item| {
+        let value =
+            fuzzy_search(query, &item.value.split(" ").collect::<Vec<&str>>(), None).join(" ");
 
-    println!("Searching for: {query}");
+        !value.is_empty() || item.id.contains(query)
+    });
+
+    println!("Searching for: {query}\n");
 
     for item in filtered_result {
         println!("id: {} value: {}", item.id, item.value);
