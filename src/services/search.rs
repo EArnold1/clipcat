@@ -89,3 +89,24 @@ pub fn fuzzy_search<'a>(
         .map(|Fuzzy { item, .. }| *item)
         .collect::<Vec<&str>>()
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn should_return_min_distance() {
+        let query = "cat";
+        let content = "clipcat";
+        let result = super::algo::levenshtein_algorithm(query, content);
+
+        assert_eq!(4, result)
+    }
+
+    #[test]
+    fn should_return_correct_search() {
+        let query = "cat";
+        let list = ["clipcat", "clipboard", "rust-app", "cat", "act"];
+        let result = super::fuzzy_search(query, &list, Some(5));
+
+        assert_eq!(vec!["cat", "act", "clipcat"], result)
+    }
+}
