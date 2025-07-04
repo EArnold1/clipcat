@@ -1,0 +1,32 @@
+name: 🚀 Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request: {}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain:
+          - stable
+          - beta 
+          - nightly
+
+    steps:
+    - name: ⬇️ Checkout repo
+      uses: actions/checkout@v4
+    
+    - run: rustup update ${{matrix.toolchain}} && rustup default ${{matrix.toolchain}}
+    
+    - name: 🔨 Build
+      run: cargo build --verbose
+      
+    - name: 🧪 Run tests
+      run: cargo test --verbose
