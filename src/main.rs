@@ -6,11 +6,9 @@ use std::error::Error;
 
 use clap::{Parser, Subcommand};
 
-use crate::{
-    clipboard::board::{read_clipboard, write_clipboard},
-    history::store::{Item, clear_history, get_item, list_items, save_item, search},
-    services::background::watcher,
-};
+use clipboard::board::{read_clipboard, write_clipboard};
+use history::store::{Item, clear_history, get_item, list_items, save_item, search};
+use services::background::watcher;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args = Args::parse();

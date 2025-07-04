@@ -95,9 +95,9 @@ pub fn search(query: &str) -> std::io::Result<()> {
     let history = load_history()?;
 
     let filtered_result = history.iter().filter(|item| {
-        let value =
-            fuzzy_search(query, &item.value.split(" ").collect::<Vec<&str>>(), None).join(" ");
+        let value = fuzzy_search(query, &item.value.split(" ").collect::<Vec<&str>>(), None);
 
+        // TODO: sort by closest match first
         !value.is_empty() || item.id.contains(query)
     });
 

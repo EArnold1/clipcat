@@ -31,7 +31,7 @@ mod algo {
         };
 
         for i in 0..=query_length {
-            dp.set_value(i, 0, i); // fill first column for each content char
+            dp.set_value(i, 0, i); // fill first column for each query char
         }
 
         for i in 0..=content_length {
